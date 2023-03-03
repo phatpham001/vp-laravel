@@ -2,6 +2,7 @@
 use Illuminate\Support\Facades\Route;
 
 use Illuminate\Http\Request;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\Admin\ProductsController;
 use App\Http\Controllers\Admin\DashboardController;
@@ -18,9 +19,9 @@ use App\Http\Controllers\Admin\MenuController;
 */
 
 
-Route::get('/', function () {
-    return view('home');    
-})->name('home');
+Route::get('/', [HomeController::class,'index'])->name('home');
+Route::get('add', [HomeController::class,'addUsers'])->name('users.add');
+Route::post('add', [HomeController::class,'handleAddUser']);
 
 //Client route
 
@@ -35,7 +36,6 @@ Route::prefix('categories')->group(function () {
     //xoa
     Route::delete('delete/{id}', [CategoryController::class,'deleteCategory'])->name('category.delete');
 });
-
 //Admin route
 Route::middleware('auth.admin')->prefix('admin')->group(function () {
     Route::get('/',[DashboardController::class,'index'])->name('auth.admin.dashboard');
