@@ -1,7 +1,11 @@
 <?php
 use Illuminate\Support\Facades\Route;
 
+use Illuminate\Http\Request;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\Admin\ProductsController;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\MenuController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -12,6 +16,12 @@ use App\Http\Controllers\CategoryController;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+
+Route::get('/', function () {
+    return view('home');    
+})->name('home');
+
 //Client route
 
 Route::prefix('categories')->group(function () {
@@ -26,39 +36,12 @@ Route::prefix('categories')->group(function () {
     Route::delete('delete/{id}', [CategoryController::class,'deleteCategory'])->name('category.delete');
 });
 
-
-
-// Route::get('/', function () {
-//     return view('welcome');
-// })->name('home');
-
-// Route::get('/', 'HomeController@index');
-// Route::get('/tin-tuc', 'HomeController@getNews');
-
-// Route::prefix('admin')->group(function () {
-//     Route::get('home/{id?}/{slug?}', function ($id=null,$slug=null) {
-//         $content ='Phuong thuc get path/home tham so:';
-//         $content.= ' slug='.$slug.'<br/>'; 
-//         $content.= ' id='.$id; 
-//         return $content;
-//     })->name('admin.tintuc');
-//     Route::get('show-form', function () {
-//         return view('show-form');
-//     })->name('admin.show-form');
-// Route::prefix('products')->middleware('checkpermission')->group(function () {
-//     Route::get('/', function () {
-//         return 'Danh sach san pham';
-//     })->name('admin.products');
-//     Route::get('add', function () {
-//         return 'them moi san pham';
-//     })->name('admin.products.add');
-//     Route::get('edit', function () {
-//         return 'chinh sua san pham';
-//     })->name('admin.products.edit');
-
-
-// });
-
-
-// });
+//Admin route
+Route::middleware('auth.admin')->prefix('admin')->group(function () {
+    Route::get('/',[DashboardController::class,'index'])->name('auth.admin.dashboard');
+    Route::resource('products', 'Admin\ProductsController')->middleware('auth.admin.product');
+    Route::prefix('menu')->group(function () {
+        Route::get('/', [MenuController::class, 'index'])->name('auth.menu.index');
+    });
+});
 
