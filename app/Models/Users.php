@@ -16,6 +16,7 @@ class Users extends Model
     public function insertUser($name,$mail){
         
         // $user=DB::select(');
+        $user=DB::insert('insert into users (name, email) values (?, ?)', [$name, $mail]);
         return $user;
     }
 }
